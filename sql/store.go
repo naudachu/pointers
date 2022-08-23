@@ -31,13 +31,41 @@ func (s Store) SearchPointByID(id int) point.Point {
 		Y: s.Y,
 	}
 }
-
 func (s Store) searchPointByID(id int) Store {
 	s.Conn.QueryRow(context.Background(),
 		"SELECT * FROM point WHERE id = $1",
 		id).Scan(&s.X, &s.Y, &s.ID)
-	var tempPoint point.Point
-	tempPoint.X = s.X
-	tempPoint.Y = s.Y
 	return s
+}
+
+func (s Store) SearhAllPoints() []point.Point {
+	//var list []point.Point
+	stores := s.searchAllPoints()
+	var list []point.Point
+	for _, val := range stores {
+		list = append(list, point.Point{
+			X: val.X,
+			Y: val.Y,
+		})
+
+	}
+	return list
+}
+
+func (s Store) searchAllPoints() []Store {
+	var stores []Store
+	rows, err := s.Conn.Query(context.Background(),
+		"SELECT * FROM point")
+	if err != nil {
+		log.Print(err)
+	}
+	//.Scan(&s.X, &s.Y, &s.ID)
+	for rows.Next() {
+		err := rows.Scan(&s.X, &s.Y, &s.ID)
+		if err != nil {
+			log.Print(err)
+		}
+		stores = append(stores, s)
+	}
+	return stores
 }

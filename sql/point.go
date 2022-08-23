@@ -1,6 +1,8 @@
 package sql
 
+import "pointers/domain/point"
+
 type PointSQL struct {
-	ID   int
-	X, Y int
+	ID int
+	point.Point
 }

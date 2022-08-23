@@ -10,6 +10,7 @@ type Point struct {
 
 type PointRepository interface {
 	SearchPointByID(int) Point
+	SearchAllPoints() []Point
 }
 
 func DistanceBetween(i, j Point) float64 {
